@@ -31,9 +31,9 @@ public class User {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-    //User kan meerdere liedjes toevoegen.
-    @OneToMany (fetch = FetchType.LAZY)
-    private List<DemoFiles> demoFiles;
+//    User kan meerdere liedjes toevoegen.
+//    @OneToMany (fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "user")
+//    private List<DemoFiles> demoFiles;
 
 
     public User() {
@@ -85,4 +85,8 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+//    public List<DemoFiles> getDemoFiles() {return demoFiles;}
+//
+//    public void setDemoFiles(List<DemoFiles> demoFiles) {this.demoFiles = demoFiles;}
 }

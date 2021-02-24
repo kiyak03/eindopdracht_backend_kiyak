@@ -1,12 +1,9 @@
 package com.kiyak.eindopdracht_backend_kiyak.domain;
 
-import javax.persistence.Entity;
-        import javax.persistence.GeneratedValue;
-        import javax.persistence.Id;
-        import javax.persistence.Lob;
-        import javax.persistence.Table;
+import javax.persistence.*;
 
-        import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.ManyToAny;
 
 @Entity
 @Table(name = "FILES")
@@ -23,8 +20,15 @@ public class DemoFiles {
 
     private Long size;
 
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JoinColumn(name = "user_id")
+//    private User user;
+
     @Lob
     private byte[] data;
+
+    public DemoFiles() {
+    }
 
     public String getId() {
         return id;

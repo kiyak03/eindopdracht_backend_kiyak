@@ -2,35 +2,45 @@ package com.kiyak.eindopdracht_backend_kiyak.service;
 
 
 import com.kiyak.eindopdracht_backend_kiyak.domain.DemoFiles;
+import com.kiyak.eindopdracht_backend_kiyak.domain.User;
 import com.kiyak.eindopdracht_backend_kiyak.repository.DemoFilesRepository;
+import com.kiyak.eindopdracht_backend_kiyak.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
-public class StorageService {
+public class StorageServiceImpl {
 
     private static DemoFilesRepository demoFilesRepository;
 
     @Autowired
-    public StorageService(DemoFilesRepository demoFilesRepository) {
+    private UserRepository userRepository;
+
+    @Autowired
+    public StorageServiceImpl(DemoFilesRepository demoFilesRepository) {
         this.demoFilesRepository = demoFilesRepository;
     }
 
     public void save(MultipartFile file) throws IOException {
-        DemoFiles fileEntity = new DemoFiles();
-        fileEntity.setName(StringUtils.cleanPath(file.getOriginalFilename()));
-        fileEntity.setContentType(file.getContentType());
-        fileEntity.setData(file.getBytes());
-        fileEntity.setSize(file.getSize());
+//        String currentUserName = ((UserDetailsImpl) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUsername();
+//        Optional<User> optUser = userRepository.findByUsername(currentUserName);
+////        file.setName(optUser.get());
 
-        demoFilesRepository.save(fileEntity);
+        DemoFiles demoFiles = new DemoFiles();
+        demoFiles.setName(StringUtils.cleanPath(file.getOriginalFilename()));
+        demoFiles.setContentType(file.getContentType());
+        demoFiles.setData(file.getBytes());
+        demoFiles.setSize(file.getSize());
+
+        demoFilesRepository.save(demoFiles);
     }
 
     public static Optional<DemoFiles> getFile(String id) {
