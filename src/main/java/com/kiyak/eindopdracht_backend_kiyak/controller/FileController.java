@@ -1,11 +1,12 @@
 package com.kiyak.eindopdracht_backend_kiyak.controller;
 
 
-import com.kiyak.eindopdracht_backend_kiyak.domain.DemoFiles;
+import com.kiyak.eindopdracht_backend_kiyak.domain.File;
 import com.kiyak.eindopdracht_backend_kiyak.domain.User;
 import com.kiyak.eindopdracht_backend_kiyak.payload.response.FileResponse;
 import com.kiyak.eindopdracht_backend_kiyak.repository.UserRepository;
-import com.kiyak.eindopdracht_backend_kiyak.service.StorageServiceImpl;
+import com.kiyak.eindopdracht_backend_kiyak.service.FileServiceImpl;
+import com.kiyak.eindopdracht_backend_kiyak.service.UserDetailsImpl;
 import com.kiyak.eindopdracht_backend_kiyak.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
-import java.security.Principal;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,30 +31,36 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/files")
-public class DemoFilesController {
+public class FileController {
 
-    private final StorageServiceImpl storageServiceImpl;
+    @Autowired
+    FileServiceImpl fileServiceImpl;
 
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserService userService;
 
     @Autowired
-    public DemoFilesController(StorageServiceImpl storageServiceImpl) {
-        this.storageServiceImpl = storageServiceImpl;
+    public FileController(FileServiceImpl fileServiceImpl) {
+        this.fileServiceImpl = fileServiceImpl;
     }
 
 //    @PreAuthorize("hasRole('USER')or hasRole('ADMIN')")
 //    @PreAuthorize("hasAnyAuthority('user', 'admin')")
     @PostMapping
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal Authentication authentication) {
+    public ResponseEntity<Object> upload(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal Authentication authentication, File dFile) throws IOException{
 
 
-//
+
+
+//        @RequestParam("userId") long userId, File dfile) throws IOException
+//        @AuthenticationPrincipal Authentication authentication)
 //        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 //        Optional<User> userOptional = userRepository.findByUsername(userDetails.getUsername());
 //        if (userOptional.isPresent()){
-//            file.setName(userOptional.get());
+//            dFile.setName(userOptional.get());
 //        }
 
 //        public ResponseEntity<JwtResponse> authenticateUserByToken(@Valid TokenRequest tokenRequest) {
@@ -71,34 +78,42 @@ public class DemoFilesController {
 //            return authenticateUser(loginRequest);
 //        }
         try {
-            storageServiceImpl.save(file);
+//            User user = userService.getUserById(userId);
+//            dFile.setUser(user);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            Optional<User> userOptional = userRepository.findByUsername(userDetails.getUsername());
+            if (userOptional.isPresent()){
+                dFile.setUser(userOptional.get());
+            }
+           fileServiceImpl.save(file, dFile);
 
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(String.format("File uploaded successfully: %s", file.getOriginalFilename()));
+            return new ResponseEntity<>("File uploaded successfully!", HttpStatus.OK);
+//                    .body(String.format("File uploaded successfully: %s", file.getOriginalFilename()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(String.format("Could not upload the file: %s!", file.getOriginalFilename()));
+            return new ResponseEntity<>("Could not upload the file!", HttpStatus.INTERNAL_SERVER_ERROR);
+//            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(String.format("Could not upload the file: %s!", file.getOriginalFilename()));
         }
     }
 
     @GetMapping
     public List<FileResponse> list() {
-        return storageServiceImpl.getAllFiles()
+        return fileServiceImpl.getAllFiles()
                 .stream()
                 .map(this::mapToFileResponse)
                 .collect(Collectors.toList());
     }
 
-    private FileResponse mapToFileResponse(DemoFiles demoFiles) {
+    private FileResponse mapToFileResponse(File file) {
         String downloadURL = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/files/")
-                .path(demoFiles.getId())
+                .path(file.getName())
                 .toUriString();
-        FileResponse fileResponse = new FileResponse("","","",0,"","");
-        fileResponse.setId(demoFiles.getId());
-        fileResponse.setName(demoFiles.getName());
-        fileResponse.setContenttype(demoFiles.getContentType());
-        fileResponse.setSize(demoFiles.getSize());
+        FileResponse fileResponse = new FileResponse("","","",0,0,"");
+        fileResponse.setId(file.getId());
+        fileResponse.setName(file.getName());
+        fileResponse.setContenttype(file.getContentType());
+        fileResponse.setSize(file.getSize());
         fileResponse.setUrl(downloadURL);
 
 
@@ -106,19 +121,20 @@ public class DemoFilesController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String id) {
-        Optional<DemoFiles> demoFilesOptional = StorageServiceImpl.getFile(id);
+    public ResponseEntity<byte[]> getFile(@PathVariable("id") long id) {
+        Optional<File> demoFilesOptional = FileServiceImpl.getFile(id);
+
 
         if (!demoFilesOptional.isPresent()) {
             return ResponseEntity.notFound()
                     .build();
         }
 
-        DemoFiles demoFiles = demoFilesOptional.get();
+        File file = demoFilesOptional.get();
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + demoFiles.getName() + "\"")
-                .contentType(MediaType.valueOf(demoFiles.getContentType()))
-                .body(demoFiles.getData());
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .contentType(MediaType.valueOf(file.getContentType()))
+                .body(file.getData());
     }
 
 }

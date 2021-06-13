@@ -40,7 +40,7 @@ public class DatabaseFiller implements CommandLineRunner {
         SignupRequest admin = new SignupRequest();
         admin.setUsername("diablo");
         admin.setEmail("diablo@hexagon.nl");
-        admin.setPassword("hexagon");
+        admin.setPassword("diablo123");
         admin.setRole(rollen);
         authorizationService.registerUser(admin);
 

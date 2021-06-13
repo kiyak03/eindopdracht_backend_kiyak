@@ -1,40 +1,48 @@
 package com.kiyak.eindopdracht_backend_kiyak.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.ManyToAny;
-
 @Entity
-@Table(name = "FILES")
-public class DemoFiles {
+@Table(name = "files")
+
+public class File {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GenericGenerator(name = "uuid", strategy = "uuid2")
+//    @Column(name = "file_id")
+    private long id;
+//    @Column(name = "file_name")
     private String name;
-
+//    @Column(name = "content_type")
     private String contentType;
-
+//    @Column(name = "file_size")
     private Long size;
 
-//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "user_id")
-//    private User user;
+
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
+    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
+    private Comment comment;
 
     @Lob
     private byte[] data;
 
-    public DemoFiles() {
+    public File() {
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -69,6 +77,41 @@ public class DemoFiles {
     public void setData(byte[] data) {
         this.data = data;
     }
+
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+        public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+//
+//    public List<DemoFiles> getDemoFiles() {
+//        return demoFiles;
+//    }
+//
+//    public void setDemoFiles(List<DemoFiles> demoFiles) {
+//        this.demoFiles = demoFiles;
+//    }
+
+//    @Override
+//    public String toString() {
+//        return "Demo{" +
+//                "id=" + id +
+//                ", user=" + user +
+//                ", comment=" + comment +
+//                '}';
+//    }
+
+
 }
 
 

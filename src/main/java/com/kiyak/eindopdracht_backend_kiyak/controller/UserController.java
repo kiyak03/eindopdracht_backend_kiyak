@@ -1,6 +1,7 @@
 package com.kiyak.eindopdracht_backend_kiyak.controller;
 
 
+import com.kiyak.eindopdracht_backend_kiyak.domain.User;
 import com.kiyak.eindopdracht_backend_kiyak.payload.request.UpdateUserRequest;
 import com.kiyak.eindopdracht_backend_kiyak.service.UserService;
 
@@ -9,14 +10,9 @@ import com.kiyak.eindopdracht_backend_kiyak.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -42,6 +38,12 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> findUserByToken(@RequestHeader Map<String, String> headers) {
         return userService.findUserByToken(headers.get("authorization"));
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable("userId") long userId) throws IOException {
+        User user = userService.getUserById(userId);
+        return ResponseEntity.ok(user);
     }
 
 }

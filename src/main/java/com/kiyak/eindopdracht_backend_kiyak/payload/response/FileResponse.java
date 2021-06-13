@@ -6,10 +6,10 @@ public class FileResponse {
     private String url;
     private String type;
     private long size;
-    private String id;
+    private long id;
     private String contenttype;
 
-    public FileResponse(String name, String url, String type, long size, String id, String contenttype) {
+    public FileResponse(String name, String url, String type, long size, long id, String contenttype) {
         this.name = name;
         this.url = url;
         this.type = type;
@@ -22,11 +22,11 @@ public class FileResponse {
         return name;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

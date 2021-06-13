@@ -3,6 +3,7 @@ package com.kiyak.eindopdracht_backend_kiyak.domain;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -12,18 +13,23 @@ public class User {
 
     @Id
     @GeneratedValue(
-            strategy= GenerationType.AUTO,
-            generator="native"
+            strategy= GenerationType.IDENTITY
+//            generator="native"
     )
-    @GenericGenerator(
-            name = "native",
-            strategy = "native"
-    )
-    @Column(columnDefinition = "serial")
-    private long id;
+//    @GenericGenerator(
+//            name = "native",
+//            strategy = "native"
+//    )
+//    @Column(columnDefinition = "serial")
+    private long userId;
     private String username;
     private String email;
     private String password;
+
+    //    User kan meerdere liedjes toevoegen.
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @PrimaryKeyJoinColumn
+    private List<File> files;
 
     @ManyToMany
     @JoinTable (name = "user_role",
@@ -31,12 +37,20 @@ public class User {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-//    User kan meerdere liedjes toevoegen.
-//    @OneToMany (fetch = FetchType.LAZY,cascade = CascadeType.ALL, mappedBy = "user")
-//    private List<DemoFiles> demoFiles;
 
 
-    public User() {
+
+//    @OneToMany
+//    @JoinTable (name = "user_demo",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "files_id"))
+//    private Set<DemoFiles> demoFiles;
+
+
+
+
+
+    public User() { this.files = new ArrayList<>();
 
     }
 
@@ -46,12 +60,18 @@ public class User {
         this.password = password;
     }
 
-    public long getId() {
-        return id;
+//    public void addFile(File file){
+//        file.setUser(this);
+//        this.files.add(file);
+//    }
+
+
+    public long getUserId() {
+        return userId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -86,7 +106,11 @@ public class User {
         this.roles = roles;
     }
 
-//    public List<DemoFiles> getDemoFiles() {return demoFiles;}
-//
-//    public void setDemoFiles(List<DemoFiles> demoFiles) {this.demoFiles = demoFiles;}
+    public List<File> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<File> files) {
+        this.files = files;
+    }
 }

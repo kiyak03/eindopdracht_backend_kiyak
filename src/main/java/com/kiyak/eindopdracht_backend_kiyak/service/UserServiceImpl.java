@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -69,6 +70,12 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.badRequest().body(new MessageResponse("User not found"));
     }
 
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+
     private String getUsernameFromToken(String token) {
         String tokenWithoutBearer = removePrefix(token);
 
@@ -107,6 +114,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setEncoder(PasswordEncoder encoder) {
         this.encoder = encoder;
+    }
+
+
+    public User getUserById(long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if(!user.isPresent()) {
+
+//            throw new UserNotFoundException(userId);
+        }
+        return user.get();
     }
 
 }

@@ -1,55 +1,58 @@
 package com.kiyak.eindopdracht_backend_kiyak.service;
 
 
-import com.kiyak.eindopdracht_backend_kiyak.domain.DemoFiles;
+import com.kiyak.eindopdracht_backend_kiyak.domain.File;
 import com.kiyak.eindopdracht_backend_kiyak.domain.User;
-import com.kiyak.eindopdracht_backend_kiyak.repository.DemoFilesRepository;
+import com.kiyak.eindopdracht_backend_kiyak.repository.FilesRepository;
 import com.kiyak.eindopdracht_backend_kiyak.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class StorageServiceImpl {
+public class FileServiceImpl implements FileService{
 
-    private static DemoFilesRepository demoFilesRepository;
+    private static FilesRepository filesRepository;
+
+//    @Autowired
+//    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    public StorageServiceImpl(DemoFilesRepository demoFilesRepository) {
-        this.demoFilesRepository = demoFilesRepository;
+    public FileServiceImpl(FilesRepository filesRepository) {
+        this.filesRepository = filesRepository;
     }
 
-    public void save(MultipartFile file) throws IOException {
+    public void save(MultipartFile file, File dFile) throws IOException {
 //        String currentUserName = ((UserDetailsImpl) ((UsernamePasswordAuthenticationToken) principal).getPrincipal()).getUsername();
 //        Optional<User> optUser = userRepository.findByUsername(currentUserName);
 ////        file.setName(optUser.get());
 
-        DemoFiles demoFiles = new DemoFiles();
-        demoFiles.setName(StringUtils.cleanPath(file.getOriginalFilename()));
-        demoFiles.setContentType(file.getContentType());
-        demoFiles.setData(file.getBytes());
-        demoFiles.setSize(file.getSize());
+        File files = new File();
+        files.setName(StringUtils.cleanPath(file.getOriginalFilename()));
+        files.setContentType(file.getContentType());
+        files.setData(file.getBytes());
+        files.setSize(file.getSize());
 
-        demoFilesRepository.save(demoFiles);
+        filesRepository.save(files);
     }
 
-    public static Optional<DemoFiles> getFile(String id) {
-        return demoFilesRepository.findById(id);
+    public static Optional<File> getFile(long id) {
+        return filesRepository.findById(id);
     }
 
-    public List<DemoFiles> getAllFiles() {
-        return demoFilesRepository.findAll();
+    public List<File> getAllFiles() {
+        return filesRepository.findAll();
     }
+
+    public Optional<File> getDemoId(Long id) { return filesRepository.findById(id);}
+
+
+
 }
 
 //    public DemoFiles store(MultipartFile file) throws IOException {
