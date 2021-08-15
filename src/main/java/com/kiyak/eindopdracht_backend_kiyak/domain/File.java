@@ -1,6 +1,7 @@
 package com.kiyak.eindopdracht_backend_kiyak.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -10,33 +11,44 @@ import javax.persistence.*;
 public class File {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @GenericGenerator(name = "uuid", strategy = "uuid2")
-//    @Column(name = "file_id")
+    @GeneratedValue(strategy = GenerationType.AUTO,
+            generator = "native"
+    )
+    @GenericGenerator(
+            name = "native",
+            strategy = "native"
+    )
+    @Column(columnDefinition = "serial")
     private long id;
-//    @Column(name = "file_name")
     private String name;
-//    @Column(name = "content_type")
     private String contentType;
-//    @Column(name = "file_size")
     private Long size;
-
+    private String comment;
 
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
+    public File() {
+    }
 
-    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
-    private Comment comment;
+    public File(long id, String name, String contentType, Long size, String comment) {
+        this.id = id;
+        this.name = name;
+        this.contentType = contentType;
+        this.size = size;
+        this.comment = comment;
+    }
+
+    //    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
+//    private Comment comment;
 
     @Lob
     private byte[] data;
 
-    public File() {
-    }
+
 
     public long getId() {
         return id;
@@ -78,15 +90,15 @@ public class File {
         this.data = data;
     }
 
-    public Comment getComment() {
+    public String getComment() {
         return comment;
     }
 
-    public void setComment(Comment comment) {
+    public void setComment(String comment) {
         this.comment = comment;
     }
 
-        public User getUser() {
+    public User getUser() {
         return user;
     }
 

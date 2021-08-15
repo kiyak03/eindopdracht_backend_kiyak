@@ -14,9 +14,19 @@ import java.util.Date;
 public class Comment {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @GeneratedValue(
+            strategy= GenerationType.AUTO,
+            generator = "native"
+            )
+
+    @GenericGenerator(
+            name = "native",
+            strategy = "native"
+    )
+    @Column(columnDefinition = "serial")
     private long id;
+    private String name;
+    private String comment;
 
     @Column(name = "body",columnDefinition = "TEXT")
     @NotEmpty(message = "*Please write something")
@@ -28,9 +38,36 @@ public class Comment {
     private Date createDate;
 
 //
-    @OneToOne
-    @JsonIgnore
-    private File file;
+//    @OneToOne
+//    @JsonIgnore
+//    private File file;
+
+    public Comment(){
+
+    }
+
+
+    public Comment(long id, String name, String comment) {
+        this.id = id;
+        this.name = name;
+        this.comment = comment;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 //
 //    @ManyToOne
 //    @PrimaryKeyJoinColumn(name = "user_id")
@@ -63,13 +100,13 @@ public class Comment {
         this.createDate = date;
     }
 
-    public File getDemoFiles() {
-        return file;
-    }
-
-    public void setDemoFiles(File file) {
-        this.file = file;
-    }
+//    public File getDemoFiles() {
+//        return file;
+//    }
+//
+//    public void setDemoFiles(File file) {
+//        this.file = file;
+//    }
 
 //    public User getUser() {
 //        return user;
