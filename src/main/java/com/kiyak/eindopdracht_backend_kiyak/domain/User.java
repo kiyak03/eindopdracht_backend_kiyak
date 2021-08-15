@@ -13,23 +13,23 @@ public class User {
 
     @Id
     @GeneratedValue(
-            strategy= GenerationType.IDENTITY
-//            generator="native"
+            strategy= GenerationType.AUTO,
+            generator = "native"
     )
-//    @GenericGenerator(
-//            name = "native",
-//            strategy = "native"
-//    )
-//    @Column(columnDefinition = "serial")
+  @GenericGenerator(
+           name = "native",
+           strategy = "native"
+   )
+   @Column(columnDefinition = "serial")
     private long userId;
     private String username;
     private String email;
     private String password;
 
     //    User kan meerdere liedjes toevoegen.
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
 //    @PrimaryKeyJoinColumn
-    private List<File> files;
+    private Set<File> files;
 
     @ManyToMany
     @JoinTable (name = "user_role",
@@ -37,20 +37,7 @@ public class User {
     inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
-
-
-
-//    @OneToMany
-//    @JoinTable (name = "user_demo",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "files_id"))
-//    private Set<DemoFiles> demoFiles;
-
-
-
-
-
-    public User() { this.files = new ArrayList<>();
+    public User() {
 
     }
 
@@ -106,11 +93,11 @@ public class User {
         this.roles = roles;
     }
 
-    public List<File> getFiles() {
+    public Set<File> getFiles() {
         return files;
     }
 
-    public void setFiles(List<File> files) {
+    public void setFiles(Set<File> files) {
         this.files = files;
     }
 }
