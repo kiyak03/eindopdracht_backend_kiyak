@@ -5,10 +5,12 @@ import com.kiyak.eindopdracht_backend_kiyak.domain.File;
 import com.kiyak.eindopdracht_backend_kiyak.domain.User;
 import com.kiyak.eindopdracht_backend_kiyak.payload.response.FileResponse;
 import com.kiyak.eindopdracht_backend_kiyak.repository.UserRepository;
+import com.kiyak.eindopdracht_backend_kiyak.service.FileService;
 import com.kiyak.eindopdracht_backend_kiyak.service.FileServiceImpl;
 import com.kiyak.eindopdracht_backend_kiyak.service.UserDetailsImpl;
 import com.kiyak.eindopdracht_backend_kiyak.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +26,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,108 +42,145 @@ public class FileController {
     @Autowired
     FileServiceImpl fileServiceImpl;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    public FileController(FileServiceImpl fileServiceImpl) {
-        this.fileServiceImpl = fileServiceImpl;
-    }
-
-//    @PreAuthorize("hasRole('USER')or hasRole('ADMIN')")
-//    @PreAuthorize("hasAnyAuthority('user', 'admin')")
-    @PostMapping
-    public ResponseEntity<Object> upload(@RequestParam("file") MultipartFile file, @AuthenticationPrincipal Authentication authentication, File dFile) throws IOException{
-
-
-
-
-//        @RequestParam("userId") long userId, File dfile) throws IOException
-//        @AuthenticationPrincipal Authentication authentication)
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//        Optional<User> userOptional = userRepository.findByUsername(userDetails.getUsername());
-//        if (userOptional.isPresent()){
-//            dFile.setName(userOptional.get());
-//        }
-
-//        public ResponseEntity<JwtResponse> authenticateUserByToken(@Valid TokenRequest tokenRequest) {
+//    @Autowired
+//    UserRepository userRepository;
 //
-//            // Username extract
-//            String username = jwtUtils.getUserNameFromJwtToken(tokenRequest.getTokenString());
-//            // Get user instantie
-//            User tokenUser =  userRepository.findByUsername(username);
-//            // Make token voor authenticateUser
-//            String password = tokenUser.getPassword();
-//            LoginRequest loginRequest = null;
-//            loginRequest.setPassword(password);
-//            loginRequest.setUsername(username);
-//            //userinfo via user instantie
-//            return authenticateUser(loginRequest);
-//        }
+//    @Autowired
+//    UserService userService;
+
+    @PreAuthorize("hasRole('USER')or hasRole('ADMIN')")
+    @PostMapping
+    public ResponseEntity<FileResponse> upload(@RequestParam("file") MultipartFile file, Principal principal,
+                                               @RequestParam("message") String message,
+                                               @RequestParam("name") String name,
+                                               @RequestParam("email") String email) throws IllegalStateException, IOException {
+
+        return fileServiceImpl.uploadFile(file, principal, email, name, message);
+
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/files/all")
+    public ResponseEntity<Object> getAllFiles() {
+        List<File> files = fileServiceImpl.getAllFiles();
+        return new ResponseEntity<>(files, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/files/{id}")
+    public ResponseEntity<Object> getUploadById(@PathVariable("id") long id) {
+        File file = fileServiceImpl.getFileById(id);
+        return new ResponseEntity<>(file, HttpStatus.OK);
+    }
+
+    //    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("files/download/{fileName}")
+    public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) {
+        Path path = Paths.get( System.getProperty("user.dir") + "/fileUploads/" + fileName);
+        UrlResource resource = null;
         try {
-//            User user = userService.getUserById(userId);
-//            dFile.setUser(user);
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            Optional<User> userOptional = userRepository.findByUsername(userDetails.getUsername());
-            if (userOptional.isPresent()){
-                dFile.setUser(userOptional.get());
-            }
-           fileServiceImpl.save(file, dFile);
-
-            return new ResponseEntity<>("File uploaded successfully!", HttpStatus.OK);
-//                    .body(String.format("File uploaded successfully: %s", file.getOriginalFilename()));
-        } catch (Exception e) {
-            return new ResponseEntity<>("Could not upload the file!", HttpStatus.INTERNAL_SERVER_ERROR);
-//            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(String.format("Could not upload the file: %s!", file.getOriginalFilename()));
+            resource = new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
-    }
-
-    @GetMapping
-    public List<FileResponse> list() {
-        return fileServiceImpl.getAllFiles()
-                .stream()
-                .map(this::mapToFileResponse)
-                .collect(Collectors.toList());
-    }
-
-    private FileResponse mapToFileResponse(File file) {
-        String downloadURL = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/files/")
-                .path(file.getName())
-                .toUriString();
-        FileResponse fileResponse = new FileResponse("","","",0,0,"");
-        fileResponse.setId(file.getId());
-        fileResponse.setName(file.getName());
-        fileResponse.setContenttype(file.getContentType());
-        fileResponse.setSize(file.getSize());
-        fileResponse.setUrl(downloadURL);
-
-
-        return fileResponse;
-    }
-
-    @GetMapping("{id}")
-    public ResponseEntity<byte[]> getFile(@PathVariable("id") long id) {
-        Optional<File> demoFilesOptional = FileServiceImpl.getFile(id);
-
-
-        if (!demoFilesOptional.isPresent()) {
-            return ResponseEntity.notFound()
-                    .build();
-        }
-
-        File file = demoFilesOptional.get();
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-                .contentType(MediaType.valueOf(file.getContentType()))
-                .body(file.getData());
+                .contentType(MediaType.parseMediaType("audio/mpeg"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
     }
+
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @GetMapping(value = "/files")
+    public ResponseEntity<Object> getAllFilesForUser(Principal principal) {
+        List<File> projects = fileServiceImpl.getAllFilesForUser(principal);
+        return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/files/{id}")
+    public ResponseEntity<FileResponse> updateUpload(@PathVariable("id") long id, @RequestParam("comment") String comment) {
+        return fileServiceImpl.updateFile(id, comment);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
+//
+//        try {
+//
+//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//            Optional<User> userOptional = userRepository.findByUsername(userDetails.getUsername());
+//            if (userOptional.isPresent()){
+//                dFile.setUser(userOptional.get());
+//            }
+//           fileServiceImpl.save(file, dFile);
+//
+//            return new ResponseEntity<>("File uploaded successfully!", HttpStatus.OK);
+////                    .body(String.format("File uploaded successfully: %s", file.getOriginalFilename()));
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("Could not upload the file!", HttpStatus.INTERNAL_SERVER_ERROR);
+////            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+////                    .body(String.format("Could not upload the file: %s!", file.getOriginalFilename()));
+//        }
+//    }
+
+//
+//    @GetMapping
+//    public List<FileResponse> list() {
+//        return fileServiceImpl.getAllFiles()
+//                .stream()
+//                .map(this::mapToFileResponse)
+//                .collect(Collectors.toList());
+//    }
+//
+//    private FileResponse mapToFileResponse(File file) {
+//        String downloadURL = ServletUriComponentsBuilder.fromCurrentContextPath()
+//                .path("/files/")
+//                .path(file.getName())
+//                .toUriString();
+//        FileResponse fileResponse = new FileResponse("","","",0,0,"");
+//        fileResponse.setId(file.getId());
+//        fileResponse.setName(file.getName());
+//        fileResponse.setContenttype(file.getContentType());
+//        fileResponse.setSize(file.getSize());
+//        fileResponse.setUrl(downloadURL);
+//
+//
+//        return fileResponse;
+//    }
+//
+//    @GetMapping("{id}")
+//    public ResponseEntity<byte[]> getFile(@PathVariable("id") long id) {
+//        Optional<File> demoFilesOptional = FileServiceImpl.getFile(id);
+//
+//
+//        if (!demoFilesOptional.isPresent()) {
+//            return ResponseEntity.notFound()
+//                    .build();
+//        }
+//
+//        File file = demoFilesOptional.get();
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+//                .contentType(MediaType.valueOf(file.getContentType()))
+//                .body(file.getData());
+//    }
+
+
 //    @Autowired
 //    FileStorageService storageService;
 //

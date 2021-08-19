@@ -3,14 +3,17 @@ package com.kiyak.eindopdracht_backend_kiyak.service;
 
 import com.kiyak.eindopdracht_backend_kiyak.domain.File;
 import com.kiyak.eindopdracht_backend_kiyak.domain.User;
+import com.kiyak.eindopdracht_backend_kiyak.payload.response.FileResponse;
 import com.kiyak.eindopdracht_backend_kiyak.repository.FilesRepository;
 import com.kiyak.eindopdracht_backend_kiyak.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +55,30 @@ public class FileServiceImpl implements FileService{
     public Optional<File> getDemoId(Long id) { return filesRepository.findById(id);}
 
 
+    @Override
+    public ResponseEntity uploadFile(MultipartFile file, Principal principal, String name, String email, String message) throws IOException {
+        return null;
+    }
 
+    @Override
+    public List<File> getAll() {
+        return null;
+    }
+
+    @Override
+    public File getFileById(long id) {
+        return null;
+    }
+
+    @Override
+    public List<File> getAllFilesForUser(Principal principal) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<FileResponse> updateFile(long id, String feedback) {
+        return null;
+    }
 }
 
 //    public DemoFiles store(MultipartFile file) throws IOException {
