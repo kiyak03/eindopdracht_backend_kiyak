@@ -1,21 +1,13 @@
 package com.kiyak.eindopdracht_backend_kiyak.controller;
 
 import com.kiyak.eindopdracht_backend_kiyak.domain.Comment;
-import com.kiyak.eindopdracht_backend_kiyak.domain.File;
-import com.kiyak.eindopdracht_backend_kiyak.domain.User;
 import com.kiyak.eindopdracht_backend_kiyak.service.CommentService;
-import com.kiyak.eindopdracht_backend_kiyak.service.FileServiceImpl;
+import com.kiyak.eindopdracht_backend_kiyak.service.DemoServiceImpl;
 import com.kiyak.eindopdracht_backend_kiyak.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.security.Principal;
-import java.util.Optional;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -25,11 +17,11 @@ public class CommentController {
 
     private final CommentService commentService;
     private final UserService userService;
-    private final FileServiceImpl fileServiceImpl;
+    private final DemoServiceImpl fileServiceImpl;
 
     @Autowired
 
-    public CommentController(CommentService commentService, UserService userService, FileServiceImpl fileServiceImpl) {
+    public CommentController(CommentService commentService, UserService userService, DemoServiceImpl fileServiceImpl) {
         this.commentService = commentService;
         this.userService = userService;
         this.fileServiceImpl = fileServiceImpl;

@@ -1,6 +1,6 @@
 package com.kiyak.eindopdracht_backend_kiyak.payload.response;
 
-public class FileResponse {
+public class DemoResponse {
 
     private String name;
     private String url;
@@ -8,14 +8,19 @@ public class FileResponse {
     private long size;
     private long id;
     private String contenttype;
+    private String message;
 
-    public FileResponse(String name, String url, String type, long size, long id, String contenttype) {
+    public DemoResponse(String name, String url, String type, long size, long id, String contenttype) {
         this.name = name;
         this.url = url;
         this.type = type;
         this.size = size;
         this.id = id;
         this.contenttype = contenttype;
+    }
+
+    public DemoResponse(String message) {
+        this.message = message;
     }
 
     public String getName() {
@@ -64,5 +69,13 @@ public class FileResponse {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

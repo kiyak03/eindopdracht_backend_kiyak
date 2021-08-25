@@ -1,14 +1,9 @@
 package com.kiyak.eindopdracht_backend_kiyak.controller;
 
 
-import com.kiyak.eindopdracht_backend_kiyak.domain.File;
-import com.kiyak.eindopdracht_backend_kiyak.domain.User;
-import com.kiyak.eindopdracht_backend_kiyak.payload.response.FileResponse;
-import com.kiyak.eindopdracht_backend_kiyak.repository.UserRepository;
-import com.kiyak.eindopdracht_backend_kiyak.service.FileService;
-import com.kiyak.eindopdracht_backend_kiyak.service.FileServiceImpl;
-import com.kiyak.eindopdracht_backend_kiyak.service.UserDetailsImpl;
-import com.kiyak.eindopdracht_backend_kiyak.service.UserService;
+import com.kiyak.eindopdracht_backend_kiyak.domain.Demo;
+import com.kiyak.eindopdracht_backend_kiyak.payload.response.DemoResponse;
+import com.kiyak.eindopdracht_backend_kiyak.service.DemoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -17,12 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 //import org.springframework.stereotype.Controller;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 import java.io.IOException;
@@ -31,16 +22,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/files")
-public class FileController {
+public class DemoController {
 
     @Autowired
-    FileServiceImpl fileServiceImpl;
+    DemoServiceImpl fileServiceImpl;
 
 //    @Autowired
 //    UserRepository userRepository;
@@ -50,7 +39,7 @@ public class FileController {
 
     @PreAuthorize("hasRole('USER')or hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<FileResponse> upload(@RequestParam("file") MultipartFile file, Principal principal,
+    public ResponseEntity<DemoResponse> upload(@RequestParam("file") MultipartFile file, Principal principal,
                                                @RequestParam("message") String message,
                                                @RequestParam("name") String name,
                                                @RequestParam("email") String email) throws IllegalStateException, IOException {
@@ -62,15 +51,15 @@ public class FileController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/files/all")
     public ResponseEntity<Object> getAllFiles() {
-        List<File> files = fileServiceImpl.getAllFiles();
-        return new ResponseEntity<>(files, HttpStatus.OK);
+        List<Demo> demos = fileServiceImpl.getAllFiles();
+        return new ResponseEntity<>(demos, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/files/{id}")
     public ResponseEntity<Object> getUploadById(@PathVariable("id") long id) {
-        File file = fileServiceImpl.getFileById(id);
-        return new ResponseEntity<>(file, HttpStatus.OK);
+        Demo demo = fileServiceImpl.getFileById(id);
+        return new ResponseEntity<>(demo, HttpStatus.OK);
     }
 
     //    @PreAuthorize("hasRole('ADMIN')")
@@ -92,12 +81,12 @@ public class FileController {
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping(value = "/files")
     public ResponseEntity<Object> getAllFilesForUser(Principal principal) {
-        List<File> projects = fileServiceImpl.getAllFilesForUser(principal);
+        List<Demo> projects = fileServiceImpl.getAllFilesForUser(principal);
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
     @PutMapping(value = "/files/{id}")
-    public ResponseEntity<FileResponse> updateUpload(@PathVariable("id") long id, @RequestParam("comment") String comment) {
+    public ResponseEntity<DemoResponse> updateUpload(@PathVariable("id") long id, @RequestParam("comment") String comment) {
         return fileServiceImpl.updateFile(id, comment);
     }
 

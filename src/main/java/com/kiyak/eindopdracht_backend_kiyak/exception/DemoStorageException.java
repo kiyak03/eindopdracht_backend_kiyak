@@ -8,11 +8,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-public class FileStorageException extends RuntimeException {
+public class DemoStorageException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
 
-//    public FileStorageException(String message) {
-//        super(message);
-//    }
+    public DemoStorageException() {
+        super("Cannot store file in database!");
+    }
+}
 //
 //    public FileStorageException(String message, Throwable cause) {
 //        super(message, cause);
@@ -30,17 +32,17 @@ public class FileStorageException extends RuntimeException {
 //    }
 //}
 
-    private static final long serialVersionUID = 1L;
-    private String msg;
 
-    public FileStorageException(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-}
+//    private String msg;
+//
+//    public FileStorageException(String msg) {
+//        this.msg = msg;
+//    }
+//
+//    public String getMsg() {
+//        return msg;
+//    }
+//}
 
 //public class FileStorageException extends ResponseEntityExceptionHandler {
 //

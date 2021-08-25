@@ -3,8 +3,6 @@ package com.kiyak.eindopdracht_backend_kiyak.domain;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,7 +27,7 @@ public class User {
     //    User kan meerdere liedjes toevoegen.
     @OneToMany(mappedBy = "user")
 //    @PrimaryKeyJoinColumn
-    private Set<File> files;
+    private Set<Demo> demos;
 
     @ManyToMany
     @JoinTable (name = "user_role",
@@ -93,11 +91,11 @@ public class User {
         this.roles = roles;
     }
 
-    public Set<File> getFiles() {
-        return files;
+    public Set<Demo> getFiles() {
+        return demos;
     }
 
-    public void setFiles(Set<File> files) {
-        this.files = files;
+    public void setFiles(Set<Demo> demos) {
+        this.demos = demos;
     }
 }

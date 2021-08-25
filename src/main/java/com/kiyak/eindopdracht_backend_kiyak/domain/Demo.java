@@ -4,11 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "files")
 
-public class File {
+public class Demo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO,
@@ -24,6 +32,9 @@ public class File {
     private String contentType;
     private Long size;
     private String comment;
+    private String uploadDir;
+    private String downloadUrl;
+
 
 
     @ManyToOne
@@ -31,22 +42,24 @@ public class File {
     @JsonIgnore
     private User user;
 
-    public File() {
+    public Demo() {
     }
 
-    public File(long id, String name, String contentType, Long size, String comment) {
+    public Demo(long id, String name, String contentType, Long size, String comment) {
         this.id = id;
         this.name = name;
         this.contentType = contentType;
         this.size = size;
         this.comment = comment;
+
     }
 
-    //    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
+ //    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
 //    private Comment comment;
 
     @Lob
     private byte[] data;
+
 
 
 
@@ -105,6 +118,23 @@ public class File {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public String getUploadDir() {
+        return uploadDir;
+    }
+
+    public void setUploadDir(String uploadDir) {
+        this.uploadDir = uploadDir;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
 //
 //    public List<DemoFiles> getDemoFiles() {
 //        return demoFiles;
