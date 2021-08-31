@@ -18,4 +18,7 @@ public interface UserService {
     ResponseEntity<?> findUserByToken(String token);
     Optional<User> findByUsername(String username);
     User getUserById(long userId);
+//    void deleteUser(long id);
+//    long saveUser(User user);
+//    void updateUser(long id, User user);
 }

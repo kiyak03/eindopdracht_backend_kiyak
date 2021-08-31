@@ -26,7 +26,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/files")
+@RequestMapping(value = "/files")
 public class DemoController {
 
     @Autowired

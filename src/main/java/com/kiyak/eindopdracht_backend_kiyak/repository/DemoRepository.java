@@ -9,5 +9,7 @@ import java.util.List;
 //Talks with Database
 public interface DemoRepository extends JpaRepository<Demo, Long> {
 
-    List<Demo> findByUserId(Long userId);
+    default List<Demo> findByUserId(Long userId) {
+        return null;
+    }
 }

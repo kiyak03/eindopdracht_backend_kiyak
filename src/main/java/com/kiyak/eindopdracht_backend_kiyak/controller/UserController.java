@@ -8,6 +8,7 @@ import com.kiyak.eindopdracht_backend_kiyak.service.UserService;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
+
 
     private UserService userService;
 
@@ -45,5 +47,23 @@ public class UserController {
         User user = userService.getUserById(userId);
         return ResponseEntity.ok(user);
     }
+//
+//    @DeleteMapping(value = "/{id}")
+//    public ResponseEntity<Object> deleteUser(@PathVariable("id") long id) {
+//        userService.deleteUser(id);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
+//
+//    @PostMapping(value = "")
+//    public ResponseEntity<Object> saveUser(@RequestBody User user) {
+//        long newId = userService.saveUser(user);
+//        return new ResponseEntity<>(newId, HttpStatus.CREATED);
+//    }
+
+//    @PutMapping(value = "/{id}")
+//    public ResponseEntity<Object> updateUser(@PathVariable("id") int id, @RequestBody User user) {
+//        userService.updateUser(id, user);
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
 }
