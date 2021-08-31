@@ -7,7 +7,10 @@ import com.kiyak.eindopdracht_backend_kiyak.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -15,66 +18,43 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/comments")
 public class CommentController {
 
-    private final CommentService commentService;
-    private final UserService userService;
-    private final DemoServiceImpl fileServiceImpl;
-
     @Autowired
+    CommentService commentService;
 
-    public CommentController(CommentService commentService, UserService userService, DemoServiceImpl fileServiceImpl) {
-        this.commentService = commentService;
-        this.userService = userService;
-        this.fileServiceImpl = fileServiceImpl;
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "")
+    public ResponseEntity<Object> getAllComments() {
+        List<Comment> comments = commentService.getAllComments();
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Object> getCommentById(@PathVariable("id") long id) {
+        Comment comment = commentService.getCommentById(id);
+        return new ResponseEntity<>(comment, HttpStatus.OK);
+    }
 
-//    @GetMapping(value = "/{id}")
-//    public String commentDemoId(@PathVariable Long id,
-//                                    Principal principal,
-//                                    Model model) {
-//
-//        Optional<File> demoFiles = fileServiceImpl.getDemoId(id);
-//
-//        if (demoFiles.isPresent()) {
-//            Optional<User> user = userService.findByUsername(principal.getName());
-//
-//            if (user.isPresent()) {
-//                Comment comment = new Comment();
-//                comment.setUser(user.get());
-//                comment.setDemoFiles(demoFiles.get());
-//
-//                model.addAttribute("comment", comment);
-//
-//                return "/commentForm";
-//
-//            } else {
-//                return "/error";
-//            }
-//
-//        } else {
-//            return "/error";
-//        }
-//    }
-
-//    @PostMapping
-//    public String Newcomment(@Valid Comment comment,
-//                                BindingResult bindingResult) {
-//
-//        if (bindingResult.hasErrors()) {
-//            return "/commentForm";
-//
-//        } else {
-//            commentService.save(comment);
-//            return "redirect:/" + comment.getDemoFiles().getId();
-//        }
-//    }
-
-    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Object> deleteComment(@PathVariable("id") long id) {
+        commentService.deleteComment(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(value = "")
     public ResponseEntity<Object> saveComment(@RequestBody Comment comment) {
-        Comment newId = commentService.save(comment);
+        long newId = commentService.saveComment(comment);
         return new ResponseEntity<>(newId, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Object> updateComment(@PathVariable("id") long id, @RequestBody Comment comment) {
+        commentService.updateComment(id, comment);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 

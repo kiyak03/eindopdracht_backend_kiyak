@@ -47,9 +47,12 @@ public class Comment {
     }
 
 
-    public Comment(long id, String name, String comment) {
+    public Comment(long id, String comment) {
         this.id = id;
-        this.name = name;
+        this.comment = comment;
+    }
+
+    public Comment(String comment) {
         this.comment = comment;
     }
 
@@ -68,13 +71,6 @@ public class Comment {
     public void setComment(String comment) {
         this.comment = comment;
     }
-//
-//    @ManyToOne
-//    @PrimaryKeyJoinColumn(name = "user_id")
-////    @JoinColumn(name = "app_user_id")
-////    , referencedColumnName = "app_user_id", nullable = false, insertable = false)
-////    @NotNull
-//    private User user;
 
     public long getId() {
         return id;
@@ -99,22 +95,6 @@ public class Comment {
     public void setCreateDate(Date date) {
         this.createDate = date;
     }
-
-//    public File getDemoFiles() {
-//        return file;
-//    }
-//
-//    public void setDemoFiles(File file) {
-//        this.file = file;
-//    }
-
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
 
 
 }

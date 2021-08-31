@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 //Talks with Database
-@Repository
 public interface DemoRepository extends JpaRepository<Demo, Long> {
 
     List<Demo> findByUserId(Long userId);

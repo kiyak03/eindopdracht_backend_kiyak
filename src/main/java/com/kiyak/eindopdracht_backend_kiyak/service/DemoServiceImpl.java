@@ -31,7 +31,7 @@ public class DemoServiceImpl implements DemoService {
     @Autowired
     private UserRepository userRepository;
 
-    public static String uploadDir = System.getProperty("user.dir") + "/fileUploads/";
+    public static String uploadDir = System.getProperty("user.dir") + "/demoFiles/";
 
     @Override
     public ResponseEntity<DemoResponse> uploadFile(MultipartFile file, Principal principal, String name, String email, String comment) throws IOException {
