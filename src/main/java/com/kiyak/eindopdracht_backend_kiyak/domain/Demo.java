@@ -31,7 +31,7 @@ public class Demo {
     private String name;
     private String demo;
     private String contentType;
-//    private Long size;
+    private Long size;
     private String comment;
     private String uploadDir;
     private String downloadUrl;
@@ -51,7 +51,7 @@ public class Demo {
         this.name = name;
         this.demo = demo;
         this.contentType = contentType;
-//        this.size = size;
+        this.size = size;
         this.comment = comment;
 
     }
@@ -88,14 +88,14 @@ public class Demo {
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
-//
-//    public Long getSize() {
-//        return size;
-//    }
-//
-//    public void setSize(Long size) {
-//        this.size = size;
-//    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
 //
 //    public byte[] getData() {
 //        return data;

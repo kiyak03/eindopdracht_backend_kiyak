@@ -58,7 +58,7 @@ public class DemoServiceImpl implements DemoService {
         files.setUploadDir(uploadDir + file.getOriginalFilename());
         files.setContentType(file.getContentType());
 //        files.setData(file.getBytes());
-//        files.setSize(file.getSize());
+        files.setSize(file.getSize());
 
         demoRepository.save(files).getId();
         return ResponseEntity.ok(new DemoResponse("File uploaded successfully!"));
