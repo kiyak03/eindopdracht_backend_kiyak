@@ -66,7 +66,7 @@ public class DemoController {
     //    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("files/download/{fileName}")
     public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) {
-        Path path = Paths.get( System.getProperty("user.dir") + "/fileUploads/" + fileName);
+        Path path = Paths.get( System.getProperty("user.dir") + "/demoFiles/" + fileName);
         UrlResource resource = null;
         try {
             resource = new UrlResource(path.toUri());

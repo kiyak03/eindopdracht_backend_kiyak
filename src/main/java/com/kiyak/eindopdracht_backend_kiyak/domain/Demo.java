@@ -29,8 +29,9 @@ public class Demo {
     @Column(columnDefinition = "serial")
     private long id;
     private String name;
+    private String demo;
     private String contentType;
-    private Long size;
+//    private Long size;
     private String comment;
     private String uploadDir;
     private String downloadUrl;
@@ -45,11 +46,12 @@ public class Demo {
     public Demo() {
     }
 
-    public Demo(long id, String name, String contentType, Long size, String comment) {
+    public Demo(long id, String name,String demo, String contentType, Long size, String comment) {
         this.id = id;
         this.name = name;
+        this.demo = demo;
         this.contentType = contentType;
-        this.size = size;
+//        this.size = size;
         this.comment = comment;
 
     }
@@ -57,8 +59,8 @@ public class Demo {
  //    @OneToOne(mappedBy = "file", cascade = CascadeType.ALL)
 //    private Comment comment;
 
-    @Lob
-    private byte[] data;
+//    @Lob
+//    private byte[] data;
 
 
 
@@ -86,22 +88,22 @@ public class Demo {
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
+//
+//    public Long getSize() {
+//        return size;
+//    }
+//
+//    public void setSize(Long size) {
+//        this.size = size;
+//    }
+//
+//    public byte[] getData() {
+//        return data;
+//    }
+//
+//    public void setData(byte[] data) {
+//        this.data = data;
+//    }
 
     public String getComment() {
         return comment;
@@ -133,6 +135,14 @@ public class Demo {
 
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
+    }
+
+    public String getDemo() {
+        return demo;
+    }
+
+    public void setDemo(String demo) {
+        this.demo = demo;
     }
 
 //
