@@ -46,19 +46,20 @@ public class DatabaseFiller implements CommandLineRunner {
 
         SignupRequest user = new SignupRequest();
         user.setUsername("user");
-        user.setEmail("user@live.nl");
+        user.setEmail("user@user.nl");
         user.setPassword("user123");
         rollen.add("user");
         user.setRole(rollen);
         authorizationService.registerUser(user);
 
-        SignupRequest superuser = new SignupRequest();
-        superuser.setUsername("superuser");
-        superuser.setEmail("super@user.nl");
-        superuser.setPassword("123456");
-        rollen.add("admin");
-        superuser.setRole(rollen);
-        authorizationService.registerUser(superuser);
+
+//        SignupRequest superuser = new SignupRequest();
+//        superuser.setUsername("superuser");
+//        superuser.setEmail("super@user.nl");
+//        superuser.setPassword("123456");
+//        rollen.add("admin");
+//        superuser.setRole(rollen);
+//        authorizationService.registerUser(superuser);
 
     }
 }

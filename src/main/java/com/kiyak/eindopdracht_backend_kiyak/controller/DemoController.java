@@ -24,8 +24,8 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
-@RestController
+@CrossOrigin(origins = "*",allowedHeaders = "*")
+@RestController("/files")
 @RequestMapping(value = "/files")
 public class DemoController {
 
@@ -50,22 +50,23 @@ public class DemoController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/files/all")
+    @GetMapping(value = "/all")
     public ResponseEntity<Object> getAllFiles() {
         List<Demo> demos = demoService.getAllFiles();
         return new ResponseEntity<>(demos, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/files/{id}")
+    @GetMapping(value = "/{id}")
     public ResponseEntity<Object> getUploadById(@PathVariable("id") long id) {
         Demo demo = demoService.getFileById(id);
         return new ResponseEntity<>(demo, HttpStatus.OK);
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("files/download/{fileName}")
+        @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("download/{fileName}")
     public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) {
+        System.out.println("ik ben hier");
         Path path = Paths.get( System.getProperty("user.dir") + "/demoFiles/" + fileName);
         UrlResource resource = null;
         try {
