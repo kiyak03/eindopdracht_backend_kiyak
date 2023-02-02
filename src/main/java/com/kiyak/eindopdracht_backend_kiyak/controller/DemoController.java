@@ -63,7 +63,7 @@ public class DemoController {
         return new ResponseEntity<>(demo, HttpStatus.OK);
     }
 
-        @PreAuthorize("hasRole('ADMIN')")
+//        @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("download/{fileName}")
     public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) {
         System.out.println("ik ben hier");
