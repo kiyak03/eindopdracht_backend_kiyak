@@ -14,12 +14,12 @@ public class User {
             strategy= GenerationType.AUTO,
             generator = "native"
     )
-  @GenericGenerator(
+    @GenericGenerator(
            name = "native",
            strategy = "native"
    )
-   @Column(columnDefinition = "serial")
-    private long userId;
+    @Column(columnDefinition = "serial")
+    private long id;
     private String username;
     private String email;
     private String password;
@@ -52,11 +52,11 @@ public class User {
 
 
     public long getUserId() {
-        return userId;
+        return id;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUsername() {

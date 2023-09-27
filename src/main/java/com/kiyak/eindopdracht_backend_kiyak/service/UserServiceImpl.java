@@ -1,6 +1,8 @@
 package com.kiyak.eindopdracht_backend_kiyak.service;
 
 import com.kiyak.eindopdracht_backend_kiyak.domain.User;
+import com.kiyak.eindopdracht_backend_kiyak.exception.DemoStorageException;
+import com.kiyak.eindopdracht_backend_kiyak.exception.NotFoundException;
 import com.kiyak.eindopdracht_backend_kiyak.payload.request.UpdateUserRequest;
 import com.kiyak.eindopdracht_backend_kiyak.payload.response.MessageResponse;
 import com.kiyak.eindopdracht_backend_kiyak.repository.UserRepository;
@@ -29,35 +31,53 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder encoder;
 
     @Override
-    public ResponseEntity<?> getAllUsers() {
-
-        List<User> users = userRepository.findAll();
-
-        if(users.isEmpty()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("No Users found!"));
-        }
-        return ResponseEntity.ok(users);
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
-    public ResponseEntity<?> updateUserById(String token, UpdateUserRequest userRequest) {
-        if(token == null || token.isEmpty()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Invalid token"));
+    public User getUserById(long id) {
+        if (userRepository.existsById(id)) {
+            return userRepository.findById(id).orElse(null);
         }
-        String username =  getUsernameFromToken(token);
-
-        if(userExists(username) && updateRequestIsValid(userRequest)) {
-            User updatedUser = findUserByUsername(username);
-            if(!userRequest.getPassword().isEmpty() && !userRequest.getRepeatedPassword().isEmpty()) {
-                updatedUser.setPassword(encoder.encode(userRequest.getPassword()));
-            }
-            if(userRequest.getEmail() != null && !userRequest.getEmail().isEmpty()) {
-                updatedUser.setEmail(userRequest.getEmail());
-            }
-            return ResponseEntity.ok().body(userRepository.save(updatedUser));
+        else {
+            throw new NotFoundException();
         }
+    }
 
-        return ResponseEntity.badRequest().body(new MessageResponse("User cannot be updated with provided data."));
+    @Override
+    public void deleteUser(long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        }
+        else {
+            throw new NotFoundException();
+        }
+    }
+
+    @Override
+    public long saveUser(User user) {
+        User newUser = userRepository.save(user);
+        return newUser.getUserId();
+    }
+
+    @Override
+    public void updateUser(long id, User user) {
+        if (userRepository.existsById(id)) {
+            try {
+                User existingUser = userRepository.findById(id).orElse(null);
+                existingUser.setUsername(user.getUsername());
+                existingUser.setEmail(user.getEmail());
+                existingUser.setPassword(user.getPassword());
+                userRepository.save(existingUser);
+            }
+            catch (Exception ex) {
+                throw new DemoStorageException();
+            }
+        }
+        else {
+            throw new NotFoundException();
+        }
     }
 
     @Override
@@ -69,12 +89,6 @@ public class UserServiceImpl implements UserService {
         }
         return ResponseEntity.badRequest().body(new MessageResponse("User not found"));
     }
-
-    @Override
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
 
     private String getUsernameFromToken(String token) {
         String tokenWithoutBearer = removePrefix(token);
@@ -94,36 +108,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByUsername(username);
     }
 
-    private boolean updateRequestIsValid(UpdateUserRequest updateUserRequest) {
-        if(updateUserRequest.getPassword().equals(updateUserRequest.getRepeatedPassword())) {
-            return true;
-        }
-        return false;
-    }
-
     private User findUserByUsername(String username) {
         return userRepository.findByUsername(username).get();
-    }
-
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Autowired
-    public void setEncoder(PasswordEncoder encoder) {
-        this.encoder = encoder;
-    }
-
-
-    public User getUserById(long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if(!user.isPresent()) {
-
-//            throw new UserNotFoundException(userId);
-        }
-        return user.get();
     }
 
 }

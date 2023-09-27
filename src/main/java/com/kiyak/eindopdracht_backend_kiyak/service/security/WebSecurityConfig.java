@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
+
 /**
  * Hier gebruiken we de EnableGlobalMethodSecurity(prePostIsEnabled = true) om de @PreAuthorize annotaties te gebruiken
  * op andere plekken in de applicatie.
@@ -29,6 +30,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(
         prePostEnabled = true
 )
+
+
+
+
+
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Qualifier("userDetailsServiceImpl")
@@ -66,13 +72,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/test/**").permitAll()
-                .antMatchers("/admin/**").permitAll()
-                .antMatchers("/api/upload/**").permitAll()
-                .antMatchers("/api/users/**").permitAll()
-                .antMatchers("/api/files/**").permitAll()
-                .antMatchers("/api/files/download/**").permitAll()
-                .antMatchers(HttpMethod.GET,"/files/download/**").permitAll()
+                .antMatchers("/api/user/**").permitAll()
+                .antMatchers("/api/user/users/**").permitAll()
+                .antMatchers("/files/**").permitAll()
+                .antMatchers("/files/").permitAll()
+                .antMatchers("/files/uploads/download/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/files/uploads/download/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/files/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/files").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/user/**").permitAll()
+
 
                 .anyRequest().authenticated();
 

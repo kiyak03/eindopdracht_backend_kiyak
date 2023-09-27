@@ -10,16 +10,6 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * In deze klasse voegen we drie gebruikers met één rol toe en eentje met allen:
- * admin, admin@admin.nl, 123456, ROL: admin
- * mod, mod@mod.nl, 123456, ROL: mod
- * user, user@user.nl, 123456, ROL: user
- * superuser, super@user.nl, 123456, ROLLEN: Admin, mod, user
- *
- * UITLEG COMPONENT ANNOTATIE
- * http://zetcode.com/springboot/component/
- */
 @Component
 public class DatabaseFiller implements CommandLineRunner {
 
@@ -48,6 +38,7 @@ public class DatabaseFiller implements CommandLineRunner {
         user.setUsername("user");
         user.setEmail("user@user.nl");
         user.setPassword("user123");
+        rollen.remove("admin");
         rollen.add("user");
         user.setRole(rollen);
         authorizationService.registerUser(user);

@@ -8,17 +8,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
-@Service
-@Validated
+
 public interface UserService {
-    ResponseEntity<?> getAllUsers();
-    ResponseEntity<?> updateUserById(String token,  @Valid UpdateUserRequest userRequest);
+    List<User> getAllUsers();
+
+    User getUserById(long id);
+
+    void deleteUser(long id);
+
+    long saveUser(User user);
+
+    void updateUser(long id, User user);
+
     ResponseEntity<?> findUserByToken(String token);
-    Optional<User> findByUsername(String username);
-    User getUserById(long userId);
-//    void deleteUser(long id);
-//    long saveUser(User user);
-//    void updateUser(long id, User user);
 }

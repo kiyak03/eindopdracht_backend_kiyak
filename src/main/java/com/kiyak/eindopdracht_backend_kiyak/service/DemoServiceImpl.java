@@ -44,7 +44,7 @@ public class DemoServiceImpl implements DemoService {
         Optional<User> optionalUserName = userRepository.findByUsername(currentUserName);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("files/download/")
+                .path("files/uploads/download/")
                 .path(file.getOriginalFilename())
                 .toUriString();
 

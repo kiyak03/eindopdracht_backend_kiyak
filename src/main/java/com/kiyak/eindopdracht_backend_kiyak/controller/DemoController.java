@@ -23,9 +23,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
-
-@CrossOrigin(origins = "*",allowedHeaders = "*")
-@RestController("/files")
+//,allowedHeaders = "*"
+@CrossOrigin(origins = "*", maxAge = 3600)
+@RestController
 @RequestMapping(value = "/files")
 public class DemoController {
 
@@ -39,7 +39,7 @@ public class DemoController {
 //    UserService userService;
 
     @PreAuthorize("hasRole('USER')or hasRole('ADMIN')")
-    @PostMapping
+    @PostMapping("/uploads")
     public ResponseEntity<DemoResponse> upload(@RequestParam("file") MultipartFile file, Principal principal,
                                                @RequestParam("message") String message,
                                                @RequestParam("name") String name,
@@ -50,23 +50,23 @@ public class DemoController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/all")
+    @GetMapping(value = "uploads/all")
     public ResponseEntity<Object> getAllFiles() {
         List<Demo> demos = demoService.getAllFiles();
+        System.out.println("demos: " + demos);
         return new ResponseEntity<>(demos, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "uploads/{id}")
     public ResponseEntity<Object> getUploadById(@PathVariable("id") long id) {
         Demo demo = demoService.getFileById(id);
         return new ResponseEntity<>(demo, HttpStatus.OK);
     }
 
 //        @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("download/{fileName}")
+    @GetMapping("uploads/download/{fileName}")
     public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) {
-        System.out.println("ik ben hier");
         Path path = Paths.get( System.getProperty("user.dir") + "/demoFiles/" + fileName);
         UrlResource resource = null;
         try {
@@ -81,13 +81,16 @@ public class DemoController {
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @GetMapping(value = "/files")
+    @GetMapping(value = "/uploads")
     public ResponseEntity<Object> getAllFilesForUser(Principal principal) {
+        System.out.println("Received a request to getAllFilesForUser");
         List<Demo> projects = demoService.getAllFilesForUser(principal);
+        System.out.println("Projects: " + projects);
         return new ResponseEntity<>(projects, HttpStatus.OK);
+
     }
 
-    @PutMapping(value = "/files/{id}")
+    @PutMapping(value = "/uploads/{id}")
     public ResponseEntity<DemoResponse> updateUpload(@PathVariable("id") long id, @RequestParam("comment") String comment) {
         return demoService.updateFile(id, comment);
     }
