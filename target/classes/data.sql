@@ -17,5 +17,5 @@ INSERT INTO role(name) VALUES('ROLE_ADMIN');
 -- INSERT INTO app_user (username, email, password) VALUES ('diablo', 'diablo@hexagon.com', 'diablo123');
 -- INSERT INTO user_role (user_id, role_id) VALUES (1, 2);
 
--- INSERT INTO demos (content_type, data, name, size, user_id) VALUES ('','' ,'4796f2ba-d56f-49e3-88dd-f7796585d877.mp3', '', 1);
+-- INSERT INTO  (upload_dir, user_id) VALUES ('demoFiles/sample1.mp3', 2);
 

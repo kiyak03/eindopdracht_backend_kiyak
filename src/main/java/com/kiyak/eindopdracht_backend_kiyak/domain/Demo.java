@@ -43,6 +43,7 @@ public class Demo {
     @JsonIgnore
     private User user;
 
+
     public Demo() {
     }
 
@@ -144,6 +145,8 @@ public class Demo {
     public void setDemo(String demo) {
         this.demo = demo;
     }
+
+
 
 //
 //    public List<DemoFiles> getDemoFiles() {

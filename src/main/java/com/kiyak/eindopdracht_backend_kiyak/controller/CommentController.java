@@ -44,19 +44,32 @@ public class CommentController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "")
-    public ResponseEntity<Object> saveComment(@RequestBody Comment comment) {
-        long newId = commentService.saveComment(comment);
+    public ResponseEntity<Object> saveComment(@RequestParam("feedback") String feedback) {
+        long newId = commentService.saveComment(feedback);
         return new ResponseEntity<>(newId, HttpStatus.CREATED);
     }
 
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping(value = "")
+//    public ResponseEntity<Object> saveComment(@RequestBody Comment comment) {
+//        long newId = commentService.saveComment(comment);
+//        return new ResponseEntity<>(newId, HttpStatus.CREATED);
+//    }
+
+
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Object> updateComment(@PathVariable("id") long id, @RequestBody Comment comment) {
+    public ResponseEntity<Object> updateComment(@PathVariable("id") long id, @RequestParam("feedback") String comment)  {
         commentService.updateComment(id, comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PutMapping(value = "/{id}")
+//    public ResponseEntity<Object> updateComment(@PathVariable("id") long id, @RequestBody Comment comment) {
+//        commentService.updateComment(id, comment);
+//        return new ResponseEntity<>(HttpStatus.OK);
 
 
 

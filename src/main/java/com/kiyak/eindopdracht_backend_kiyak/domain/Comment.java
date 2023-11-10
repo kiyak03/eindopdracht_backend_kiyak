@@ -27,6 +27,7 @@ public class Comment {
     private long id;
     private String name;
     private String comment;
+    private String feedback;
 
     @Column(name = "body",columnDefinition = "TEXT")
     @NotEmpty(message = "*Please write something")
@@ -37,10 +38,6 @@ public class Comment {
     @CreationTimestamp
     private Date createDate;
 
-//
-//    @OneToOne
-//    @JsonIgnore
-//    private File file;
 
     public Comment(){
 
@@ -96,5 +93,11 @@ public class Comment {
         this.createDate = date;
     }
 
+    public String getFeedback() {
+        return feedback;
+    }
 
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
+    }
 }

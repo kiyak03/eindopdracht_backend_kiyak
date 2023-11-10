@@ -12,7 +12,7 @@ public interface CommentService {
 
     void deleteComment(long id);
 
-    long saveComment(Comment comment);
+    long saveComment(String feedback);
 
-    void updateComment(long id, Comment feedbackText);
+    void updateComment(long id, String comment);
 }
