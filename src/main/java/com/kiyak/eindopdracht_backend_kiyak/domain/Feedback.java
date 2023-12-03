@@ -1,5 +1,6 @@
 package com.kiyak.eindopdracht_backend_kiyak.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,8 +11,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "comment")
-public class Comment {
+@Table(name = "feedback")
+public class Feedback {
 
     @Id
     @GeneratedValue(
@@ -29,6 +30,11 @@ public class Comment {
     private String comment;
     private String feedback;
 
+    @ManyToOne
+    @JoinColumn(name = "demo_id")
+    @JsonBackReference
+    private Demo demo;
+
     @Column(name = "body",columnDefinition = "TEXT")
     @NotEmpty(message = "*Please write something")
     private String body;
@@ -38,19 +44,18 @@ public class Comment {
     @CreationTimestamp
     private Date createDate;
 
-
-    public Comment(){
+    public Feedback(){
 
     }
 
 
-    public Comment(long id, String comment) {
+    public Feedback(long id, String feedback) {
         this.id = id;
-        this.comment = comment;
+        this.feedback = feedback;
     }
 
-    public Comment(String comment) {
-        this.comment = comment;
+    public Feedback(String feedback) {
+        this.feedback = feedback;
     }
 
     public String getName() {
@@ -99,5 +104,16 @@ public class Comment {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public Demo getDemo() {
+        return demo;
+    }
+
+    public void setDemo(Demo demo) {
+        this.demo = demo;
+    }
+
+    public void setUser(User user) {
     }
 }

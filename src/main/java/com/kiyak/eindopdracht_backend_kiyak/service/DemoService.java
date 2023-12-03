@@ -15,4 +15,6 @@ public interface DemoService {
     Demo getFileById(long id);
     List<Demo> getAllFilesForUser(Principal principal);
     ResponseEntity<DemoResponse> updateFile(long id, String feedback);
+
+//    Long getDemoIdByUsername(String );
 }

@@ -1,6 +1,7 @@
 package com.kiyak.eindopdracht_backend_kiyak.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "files")
@@ -43,6 +46,9 @@ public class Demo {
     @JsonIgnore
     private User user;
 
+    @OneToMany(mappedBy = "demo", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Feedback> feedback;
 
     public Demo() {
     }
@@ -97,6 +103,8 @@ public class Demo {
     public void setSize(Long size) {
         this.size = size;
     }
+
+
 //
 //    public byte[] getData() {
 //        return data;
@@ -146,86 +154,18 @@ public class Demo {
         this.demo = demo;
     }
 
+    public List<Feedback> getFeedback() {
+            return feedback;
+        }
+
+        public void setFeedback(List<Feedback> feedback) {
+            this.feedback = feedback;
+        }
 
 
-//
-//    public List<DemoFiles> getDemoFiles() {
-//        return demoFiles;
-//    }
-//
-//    public void setDemoFiles(List<DemoFiles> demoFiles) {
-//        this.demoFiles = demoFiles;
-//    }
-
-//    @Override
-//    public String toString() {
-//        return "Demo{" +
-//                "id=" + id +
-//                ", user=" + user +
-//                ", comment=" + comment +
-//                '}';
-//    }
-
-
+    public void addFeedback(Feedback newFeedback) {
+        feedback.add(newFeedback);
+        newFeedback.setDemo(this);
+    }
 }
 
-
-
-
-
-
-
-//
-//@Entity
-//@Table(name = "files")
-//public class DemoFiles {
-//    @Id
-//    @GeneratedValue(generator = "uuid")
-//    @GenericGenerator(name = "uuid", strategy = "uuid2")
-//    private String id;
-//
-//    private String name;
-//
-//    private String type;
-//
-//    @Lob
-//    private byte[] data;
-//
-//    public DemoFiles() {
-//    }
-//
-//    public DemoFiles(String name, String type, byte[] data) {
-//        this.name = name;
-//        this.type = type;
-//        this.data = data;
-//    }
-//
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
-//
-//    public String getType() {
-//        return type;
-//    }
-//
-//    public void setType(String type) {
-//        this.type = type;
-//    }
-//
-//    public byte[] getData() {
-//        return data;
-//    }
-//
-//    public void setData(byte[] data) {
-//        this.data = data;
-//    }
-//
-//}

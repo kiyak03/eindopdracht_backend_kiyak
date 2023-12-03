@@ -2,6 +2,7 @@ package com.kiyak.eindopdracht_backend_kiyak.controller;
 
 
 import com.kiyak.eindopdracht_backend_kiyak.domain.Demo;
+import com.kiyak.eindopdracht_backend_kiyak.exception.NotFoundException;
 import com.kiyak.eindopdracht_backend_kiyak.payload.response.DemoResponse;
 import com.kiyak.eindopdracht_backend_kiyak.service.DemoService;
 import com.kiyak.eindopdracht_backend_kiyak.service.DemoServiceImpl;
@@ -59,11 +60,16 @@ public class DemoController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "uploads/{id}")
-    public ResponseEntity<Object> getUploadById(@PathVariable("id") long id) {
-        Demo demo = demoService.getFileById(id);
-        return new ResponseEntity<>(demo, HttpStatus.OK);
+    public ResponseEntity<Object> getUploadById(@PathVariable("id") String id) {
+        System.out.println("Received a request to getUploadById");
+        try {
+            long parsedId = Long.parseLong(id);
+            Demo demo = demoService.getFileById(parsedId);
+            return new ResponseEntity<>(demo, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>("Invalid id", HttpStatus.BAD_REQUEST);
+        }
     }
-
 //        @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("uploads/download/{fileName}")
     public ResponseEntity downloadFileFromLocal(@PathVariable String fileName) {
