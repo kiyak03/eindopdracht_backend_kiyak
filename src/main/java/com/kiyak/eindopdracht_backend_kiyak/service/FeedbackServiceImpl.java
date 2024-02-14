@@ -37,6 +37,11 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
+    public List<Feedback> getFeedbackByDemoId(long demoId) {
+        return feedbackRepository.findByDemoId(demoId);
+    }
+
+    @Override
     public Feedback getFeedbackById(long id) {
         if (feedbackRepository.existsById(id)) {
             return feedbackRepository.findById(id).orElse(null);
@@ -173,6 +178,13 @@ public class FeedbackServiceImpl implements FeedbackService {
             throw new NotFoundException();
         }
     }
+
+//    @Override
+//    public List<Feedback> getAllFeedbackForDemoId(long demoId) {
+//        return feedbackRepository.findByDemoId(demoId);
+//    }
+
+
 //    @Override
 //    public void updateFeedback(long id, Feedback comment) {
 //        if (commentRepository.existsById(id)) {

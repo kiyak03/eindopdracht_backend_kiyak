@@ -20,4 +20,9 @@ public interface FeedbackService {
     ResponseEntity<String> saveFeedback(Long demoId, String feedback, Principal principal);
 
     void updateFeedback(long id, String comment);
+
+    List<Feedback> getFeedbackByDemoId(long demoId);
+
+
+
 }

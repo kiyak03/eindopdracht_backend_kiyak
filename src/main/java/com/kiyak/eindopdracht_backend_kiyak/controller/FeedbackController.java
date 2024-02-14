@@ -32,11 +32,33 @@ public class FeedbackController {
         return new ResponseEntity<>(feedbacks, HttpStatus.OK);
     }
 
+
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @GetMapping(value = "/demo/{demoId}")
+    public ResponseEntity<Object> getFeedbackByDemoId(@PathVariable("demoId") long demoId) {
+        try {
+            List<Feedback> feedbackList = feedbackService.getFeedbackByDemoId(demoId);
+            return new ResponseEntity<>(feedbackList, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>("Feedback not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error occurred while fetching feedback", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
     @PreAuthorize("hasRole('USER')or hasRole('ADMIN')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<Object> getFeedbackById(@PathVariable("id") long id) {
-        Feedback feedback = feedbackService.getFeedbackById(id);
-        return new ResponseEntity<>(feedback, HttpStatus.OK);
+        try {
+            Feedback feedback = feedbackService.getFeedbackById(id);
+            return new ResponseEntity<>(feedback, HttpStatus.OK);
+        }catch (NotFoundException e) {
+            return new ResponseEntity<>("Feedback not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error occurred while fetching feedback", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -45,23 +67,6 @@ public class FeedbackController {
         feedbackService.deleteFeedback(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-//    public ResponseEntity<Object> saveFeedback(@RequestParam("feedback") String feedback,
-//                                              Principal principal) {
-//
-//
-////        // Get the username (or any other user-related information) of the authenticated user
-////        String username = principal.getName();
-////
-////        // Retrieve demoId based on the user, e.g., from a service method
-////
-////        Demo demo = demoService.getFileById(Demo.class());
-////
-////        // Proceed with saving the comment, providing feedback, demoId, and userId
-////        long newId = commentService.saveFeedback(feedback, demo.getId(), username);
-////        return new ResponseEntity<>(newId, HttpStatus.CREATED);
-//    }
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "")
@@ -78,14 +83,6 @@ public class FeedbackController {
         }
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PostMapping(value = "")
-//    public ResponseEntity<Object> saveFeedback(@RequestBody Feedback comment) {
-//        long newId = commentService.saveFeedback(comment);
-//        return new ResponseEntity<>(newId, HttpStatus.CREATED);
-//    }
-
-
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
@@ -93,13 +90,6 @@ public class FeedbackController {
         feedbackService.updateFeedback(id, comment);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-//    @PreAuthorize("hasRole('ADMIN')")
-//    @PutMapping(value = "/{id}")
-//    public ResponseEntity<Object> updateFeedback(@PathVariable("id") long id, @RequestBody Feedback comment) {
-//        commentService.updateFeedback(id, comment);
-//        return new ResponseEntity<>(HttpStatus.OK);
-
 
 
 }
