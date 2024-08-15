@@ -17,7 +17,7 @@ public interface FeedbackService {
 
 //    long saveFeedback(String feedback, Long demoId, Principal principal) throws NotFoundException;
 
-    ResponseEntity<String> saveFeedback(Long demoId, String feedback, Principal principal);
+    ResponseEntity<String> saveFeedback(Long demoId, String comment, String feedback, Principal principal);
 
     void updateFeedback(long id, String comment);
 

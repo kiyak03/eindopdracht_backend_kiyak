@@ -71,12 +71,13 @@ public class FeedbackController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = "")
     public ResponseEntity<Object> saveFeedback(
+            @RequestParam("comment") String comment,
             @RequestParam("feedback") String feedback,
             @RequestParam("demoId") Long demoId,
             Principal principal) {
         try {
-            ResponseEntity<String> newId = feedbackService.saveFeedback(demoId, feedback, principal);
-            System.out.println("feedback: " + newId + principal + feedback);
+            ResponseEntity<String> newId = feedbackService.saveFeedback(demoId, comment, feedback, principal);
+            System.out.println("feedback: " + newId + principal + feedback + comment);
             return new ResponseEntity<>(newId, HttpStatus.CREATED);
         } catch (NotFoundException e){
             return new ResponseEntity<>("Demo not found with ID: ", HttpStatus.NOT_FOUND);

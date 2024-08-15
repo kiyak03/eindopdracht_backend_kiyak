@@ -27,7 +27,11 @@ public class Feedback {
     @Column(columnDefinition = "serial")
     private long id;
     private String name;
+
+    @Column(name = "comment")
     private String comment;
+
+    @Column(name = "feedback")
     private String feedback;
 
     @ManyToOne

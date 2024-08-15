@@ -117,28 +117,32 @@ public class FeedbackServiceImpl implements FeedbackService {
 //        }
 //    }
 
-    public ResponseEntity<String> saveFeedback(Long demoId, String feedback, Principal principal) {
+    public ResponseEntity<String> saveFeedback(Long demoId, String comment, String feedback, Principal principal) {
         UserDetailsImpl userDetails = (UserDetailsImpl) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         Long currentUserId = userDetails.getId();
 
         Optional<Demo> optionalDemo = demoRepository.findById(demoId);
 
+//
         if (optionalDemo.isPresent()) {
             Demo demo = optionalDemo.get();
 
             Optional<User> optionalUser = userRepository.findById(currentUserId);
 
-            Feedback newFeedback = new Feedback();
-            newFeedback.setComment(feedback);
-            newFeedback.setUser(optionalUser.get());
+            if (optionalUser.isPresent()) {
+                Feedback newFeedback = new Feedback();
+                newFeedback.setComment(comment); // Store the feedback option in the comment column
+                newFeedback.setFeedback(feedback); // Store the user's added comment in the feedback column
+                newFeedback.setDemo(demo);
+                newFeedback.setUser(optionalUser.get());
 
-            // Associate the feedback with the demo
-            demo.addFeedback(newFeedback);
+                // Save the feedback to the repository
+                feedbackRepository.save(newFeedback);
 
-            // Save the updated demo with feedback
-            demoRepository.save(demo);
-
-            return ResponseEntity.ok("Feedback submitted successfully!");
+                return ResponseEntity.ok("Feedback submitted successfully!");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found with ID: " + currentUserId);
+            }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Demo not found for the given demoId");
         }

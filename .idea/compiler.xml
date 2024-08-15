@@ -9,9 +9,6 @@
         <module name="eindopdracht_backend_kiyak" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="eindopdracht_backend_kiyak" target="11" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
